@@ -1,0 +1,33 @@
+## Interface: 110002
+## Title: Better Resources
+## Notes: Clean, minimal resource frame
+## Author: Reapz
+## Version: 1.0.0
+## SavedVariables: BetterResourcesDB
+
+# Core initialization
+Core.lua
+
+# Utilities
+utils\Colors.lua
+utils\Formatter.lua
+
+# UI Factory
+ui\FrameFactory.lua
+ui\SettingsPanel.lua
+
+# Secondary resource components
+modules\secondary\RuneDisplay.lua
+modules\secondary\RogueComboDisplay.lua
+modules\secondary\DruidComboDisplay.lua
+modules\secondary\MonkChiDisplay.lua
+modules\secondary\PaladinHolyPowerDisplay.lua
+modules\secondary\EssenceDisplay.lua
+modules\secondary\SoulShardDisplay.lua
+modules\secondary\ArcaneChargesDisplay.lua
+
+# Frame modules
+modules\ResourceFrame.lua
+
+# Configuration and commands
+Config.lua
