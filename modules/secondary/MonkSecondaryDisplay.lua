@@ -26,7 +26,8 @@ function BR.MonkSecondaryDisplay:CreateOrbs()
     local totalWidth = (orbWidth * self.maxOrbs) + (orbSpacing * (self.maxOrbs - 1))
     
     for i = 1, self.maxOrbs do
-        local orb = CreateFrame("Frame", nil, self.parent, "BackdropTemplate")
+        -- Create a status bar for each orb to show filling without comparing secret values
+        local orb = CreateFrame("StatusBar", nil, self.parent, "BackdropTemplate")
         orb:SetSize(orbWidth, 8)
         orb:SetBackdrop({
             bgFile = "Interface\\Buttons\\WHITE8X8",
@@ -36,6 +37,8 @@ function BR.MonkSecondaryDisplay:CreateOrbs()
         orb:SetBackdropColor(0.1, 0.1, 0.1, 0.8)
         orb:SetBackdropBorderColor(0, 0, 0, 1)
         orb:EnableMouse(false)
+        orb:SetMinMaxValues(0, 1)
+        orb:SetValue(0)
         
         if i == 1 then
             orb:SetPoint("TOP", self.parent, "BOTTOM", -(totalWidth/2) + (orbWidth/2), -2)
@@ -43,45 +46,53 @@ function BR.MonkSecondaryDisplay:CreateOrbs()
             orb:SetPoint("LEFT", self.orbs[i-1], "RIGHT", orbSpacing, 0)
         end
         
-        orb.fill = orb:CreateTexture(nil, "ARTWORK")
-        orb.fill:SetAllPoints(orb)
-        orb.fill:SetTexture("Interface\\Buttons\\WHITE8X8")
-        orb.fill:SetVertexColor(0, 1, 0.59, 1) -- Green
-        orb.fill:Hide()
+        -- Set the status bar texture
+        orb:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+        orb:SetStatusBarColor(0, 1, 0.59, 1) -- Green
         
-        orb:Hide()
         self.orbs[i] = orb
     end
 end
 
 -- Update chi display
 function BR.MonkSecondaryDisplay:Update()
-    local current = UnitPower("player", Enum.PowerType.Chi) or 0
-    local max = UnitPowerMax("player", Enum.PowerType.Chi) or 0
-    
-    if max == 0 then
+    -- Only show chi for Windwalker spec (spec 3)
+    local specIndex = GetSpecialization()
+    if specIndex ~= 3 then
         self:Hide()
         return
     end
     
-    -- Show and update orbs
-    for i = 1, max do
-        local orb = self.orbs[i]
-        if orb then
-            orb:Show()
-            
-            if i <= (current or 0) then
-                orb.fill:Show()
-            else
-                orb.fill:Hide()
-            end
-        end
+    -- Get chi as raw value (not secret when using StatusBar)
+    local current = UnitPower("player", Enum.PowerType.Chi)
+    local max = UnitPowerMax("player", Enum.PowerType.Chi)
+    
+    -- Check if we have valid max
+    if not max or max == 0 then
+        self:Hide()
+        return
     end
     
-    -- Hide extra orbs
-    for i = max + 1, self.maxOrbs do
-        if self.orbs[i] then
-            self.orbs[i]:Hide()
+    -- Ensure current is valid, default to 0
+    current = current or 0
+    
+    -- Update each orb using StatusBar approach
+    for i = 1, self.maxOrbs do
+        local orb = self.orbs[i]
+        if orb then
+            if i <= max then
+                orb:Show()
+                
+                -- Each orb represents exactly 1 chi
+                local minValue = i - 1
+                local maxValue = i
+                orb:SetMinMaxValues(minValue, maxValue)
+                
+                -- Set the current value directly - StatusBar handles the display
+                orb:SetValue(current)
+            else
+                orb:Hide()
+            end
         end
     end
 end
