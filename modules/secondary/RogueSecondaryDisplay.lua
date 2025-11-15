@@ -26,7 +26,8 @@ function BR.RogueSecondaryDisplay:CreatePoints()
     local totalWidth = (pointWidth * self.maxPoints) + (pointSpacing * (self.maxPoints - 1))
     
     for i = 1, self.maxPoints do
-        local point = CreateFrame("Frame", nil, self.parent, "BackdropTemplate")
+        -- Create a status bar for each point to show filling without comparing secret values
+        local point = CreateFrame("StatusBar", nil, self.parent, "BackdropTemplate")
         point:SetSize(pointWidth, 8)
         point:SetBackdrop({
             bgFile = "Interface\\Buttons\\WHITE8X8",
@@ -36,6 +37,8 @@ function BR.RogueSecondaryDisplay:CreatePoints()
         point:SetBackdropColor(0.1, 0.1, 0.1, 0.8)
         point:SetBackdropBorderColor(0, 0, 0, 1)
         point:EnableMouse(false)
+        point:SetMinMaxValues(0, 1)
+        point:SetValue(0)
         
         if i == 1 then
             point:SetPoint("TOP", self.parent, "BOTTOM", -(totalWidth/2) + (pointWidth/2), -2)
@@ -43,45 +46,46 @@ function BR.RogueSecondaryDisplay:CreatePoints()
             point:SetPoint("LEFT", self.points[i-1], "RIGHT", pointSpacing, 0)
         end
         
-        point.fill = point:CreateTexture(nil, "ARTWORK")
-        point.fill:SetAllPoints(point)
-        point.fill:SetTexture("Interface\\Buttons\\WHITE8X8")
-        point.fill:SetVertexColor(1, 0.96, 0.41, 1) -- Yellow
-        point.fill:Hide()
+        -- Set the status bar texture
+        point:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+        point:SetStatusBarColor(1, 0.96, 0.41, 1) -- Yellow
         
-        point:Hide()
         self.points[i] = point
     end
 end
 
 -- Update combo point display
 function BR.RogueSecondaryDisplay:Update()
-    local current = UnitPower("player", Enum.PowerType.ComboPoints) or 0
-    local max = UnitPowerMax("player", Enum.PowerType.ComboPoints) or 0
+    -- Get combo points as raw value (not secret when using StatusBar)
+    local current = UnitPower("player", Enum.PowerType.ComboPoints)
+    local max = UnitPowerMax("player", Enum.PowerType.ComboPoints)
     
-    if max == 0 then
+    -- Check if we have valid max
+    if not max or max == 0 then
         self:Hide()
         return
     end
     
-    -- Show and update points
-    for i = 1, max do
+    -- Ensure current is valid, default to 0
+    current = current or 0
+    
+    -- Update each point using StatusBar approach
+    for i = 1, self.maxPoints do
         local point = self.points[i]
         if point then
-            point:Show()
-            
-            if i <= (current or 0) then
-                point.fill:Show()
+            if i <= max then
+                point:Show()
+                
+                -- Each point represents exactly 1 combo point
+                local minValue = i - 1
+                local maxValue = i
+                point:SetMinMaxValues(minValue, maxValue)
+                
+                -- Set the current value directly - StatusBar handles the display
+                point:SetValue(current)
             else
-                point.fill:Hide()
+                point:Hide()
             end
-        end
-    end
-    
-    -- Hide extra points
-    for i = max + 1, self.maxPoints do
-        if self.points[i] then
-            self.points[i]:Hide()
         end
     end
 end
