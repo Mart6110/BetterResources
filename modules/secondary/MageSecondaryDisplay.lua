@@ -26,7 +26,8 @@ function BR.MageSecondaryDisplay:CreateCharges()
     local totalWidth = (chargeWidth * self.maxCharges) + (chargeSpacing * (self.maxCharges - 1))
     
     for i = 1, self.maxCharges do
-        local charge = CreateFrame("Frame", nil, self.parent, "BackdropTemplate")
+        -- Create a status bar for each charge to show filling without comparing secret values
+        local charge = CreateFrame("StatusBar", nil, self.parent, "BackdropTemplate")
         charge:SetSize(chargeWidth, 9)
         charge:SetBackdrop({
             bgFile = "Interface\\Buttons\\WHITE8X8",
@@ -36,6 +37,8 @@ function BR.MageSecondaryDisplay:CreateCharges()
         charge:SetBackdropColor(0.1, 0.1, 0.1, 0.8)
         charge:SetBackdropBorderColor(0.1, 0.3, 0.5, 1) -- Blue border
         charge:EnableMouse(false)
+        charge:SetMinMaxValues(0, 1)
+        charge:SetValue(0)
         
         if i == 1 then
             charge:SetPoint("TOP", self.parent, "BOTTOM", -(totalWidth/2) + (chargeWidth/2), -2)
@@ -43,53 +46,53 @@ function BR.MageSecondaryDisplay:CreateCharges()
             charge:SetPoint("LEFT", self.charges[i-1], "RIGHT", chargeSpacing, 0)
         end
         
-        charge.fill = charge:CreateTexture(nil, "ARTWORK")
-        charge.fill:SetAllPoints(charge)
-        charge.fill:SetTexture("Interface\\Buttons\\WHITE8X8")
-        charge.fill:SetVertexColor(0.41, 0.8, 0.94, 1) -- Bright blue for arcane charges
-        charge.fill:Hide()
+        -- Set the status bar texture
+        charge:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
+        charge:SetStatusBarColor(0.41, 0.8, 0.94, 1) -- Bright blue for arcane charges
         
-        charge:Hide()
         self.charges[i] = charge
     end
 end
 
 -- Update arcane charges display
 function BR.MageSecondaryDisplay:Update()
-    -- Get power values and desecretize through string formatting
-    local rawCurrent = UnitPower("player", Enum.PowerType.ArcaneCharges)
-    local rawMax = UnitPowerMax("player", Enum.PowerType.ArcaneCharges)
+    -- Only show arcane charges for Arcane spec (spec 1)
+    local specIndex = GetSpecialization()
+    if specIndex ~= 1 then
+        self:Hide()
+        return
+    end
     
-    -- Convert through string to remove taint/secret status, handle nil first
-    local current = (rawCurrent and tonumber(format("%d", rawCurrent))) or 0
-    local max = (rawMax and tonumber(format("%d", rawMax))) or 0
+    -- Get arcane charges as raw value (not secret when using StatusBar)
+    local current = UnitPower("player", Enum.PowerType.ArcaneCharges)
+    local max = UnitPowerMax("player", Enum.PowerType.ArcaneCharges)
     
+    -- Check if we have valid max
     if not max or max == 0 then
         self:Hide()
         return
     end
     
-    -- Show and update charges
-    -- Values are not secret when called from event callbacks
-    for i = 1, max do
+    -- Ensure current is valid, default to 0
+    current = current or 0
+    
+    -- Update each charge using StatusBar approach
+    for i = 1, self.maxCharges do
         local charge = self.charges[i]
         if charge then
-            charge:Show()
-            
-            if i <= (current or 0) then
-                -- Charge is active
-                charge.fill:Show()
+            if i <= max then
+                charge:Show()
+                
+                -- Each charge represents exactly 1 arcane charge
+                local minValue = i - 1
+                local maxValue = i
+                charge:SetMinMaxValues(minValue, maxValue)
+                
+                -- Set the current value directly - StatusBar handles the display
+                charge:SetValue(current)
             else
-                -- Charge is inactive
-                charge.fill:Hide()
+                charge:Hide()
             end
-        end
-    end
-    
-    -- Hide extra charges
-    for i = max + 1, self.maxCharges do
-        if self.charges[i] then
-            self.charges[i]:Hide()
         end
     end
 end
