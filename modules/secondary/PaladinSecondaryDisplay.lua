@@ -1,40 +1,40 @@
--- Better Resources: Rogue Combo Points Display Component
--- Single Responsibility: Display Rogue combo points
+-- Better Resources: Paladin Secondary Resource Display Component
+-- Single Responsibility: Display Paladin holy power points
 local _, BR = ...
 
-BR.RogueComboDisplay = {}
-BR.RogueComboDisplay.__index = BR.RogueComboDisplay
+BR.PaladinSecondaryDisplay = {}
+BR.PaladinSecondaryDisplay.__index = BR.PaladinSecondaryDisplay
 
 -- Constructor
-function BR.RogueComboDisplay:new(parent, width)
-    local self = setmetatable({}, BR.RogueComboDisplay)
+function BR.PaladinSecondaryDisplay:new(parent, width)
+    local self = setmetatable({}, BR.PaladinSecondaryDisplay)
     
     self.parent = parent
     self.points = {}
     self.width = width or 250
-    self.maxPoints = 7 -- Rogues can have up to 7 with talents
+    self.maxPoints = 5
     
     self:CreatePoints()
     
     return self
 end
 
--- Create individual point displays
-function BR.RogueComboDisplay:CreatePoints()
-    local pointWidth = math.floor((self.width - 24) / self.maxPoints)
+-- Create individual holy power displays
+function BR.PaladinSecondaryDisplay:CreatePoints()
+    local pointWidth = math.floor((self.width - 16) / self.maxPoints)
     local pointSpacing = 4
     local totalWidth = (pointWidth * self.maxPoints) + (pointSpacing * (self.maxPoints - 1))
     
     for i = 1, self.maxPoints do
         local point = CreateFrame("Frame", nil, self.parent, "BackdropTemplate")
-        point:SetSize(pointWidth, 8)
+        point:SetSize(pointWidth, 9)
         point:SetBackdrop({
             bgFile = "Interface\\Buttons\\WHITE8X8",
             edgeFile = "Interface\\Buttons\\WHITE8X8",
             edgeSize = 1,
         })
         point:SetBackdropColor(0.1, 0.1, 0.1, 0.8)
-        point:SetBackdropBorderColor(0, 0, 0, 1)
+        point:SetBackdropBorderColor(0.8, 0.7, 0.3, 1)
         point:EnableMouse(false)
         
         if i == 1 then
@@ -46,7 +46,7 @@ function BR.RogueComboDisplay:CreatePoints()
         point.fill = point:CreateTexture(nil, "ARTWORK")
         point.fill:SetAllPoints(point)
         point.fill:SetTexture("Interface\\Buttons\\WHITE8X8")
-        point.fill:SetVertexColor(1, 0.96, 0.41, 1) -- Yellow
+        point.fill:SetVertexColor(0.95, 0.9, 0.6, 1) -- Holy gold
         point.fill:Hide()
         
         point:Hide()
@@ -54,10 +54,10 @@ function BR.RogueComboDisplay:CreatePoints()
     end
 end
 
--- Update combo point display
-function BR.RogueComboDisplay:Update()
-    local current = UnitPower("player", Enum.PowerType.ComboPoints) or 0
-    local max = UnitPowerMax("player", Enum.PowerType.ComboPoints) or 0
+-- Update holy power display
+function BR.PaladinSecondaryDisplay:Update()
+    local current = UnitPower("player", Enum.PowerType.HolyPower) or 0
+    local max = UnitPowerMax("player", Enum.PowerType.HolyPower) or 0
     
     if max == 0 then
         self:Hide()
@@ -87,10 +87,10 @@ function BR.RogueComboDisplay:Update()
 end
 
 -- Update width when parent frame is resized
-function BR.RogueComboDisplay:UpdateWidth(width)
+function BR.PaladinSecondaryDisplay:UpdateWidth(width)
     self.width = width
     
-    local pointWidth = math.floor((width - 24) / self.maxPoints)
+    local pointWidth = math.floor((width - 16) / self.maxPoints)
     local pointSpacing = 4
     local totalWidth = (pointWidth * self.maxPoints) + (pointSpacing * (self.maxPoints - 1))
     
@@ -110,8 +110,8 @@ function BR.RogueComboDisplay:UpdateWidth(width)
 end
 
 -- Show all points
-function BR.RogueComboDisplay:Show()
-    local max = UnitPowerMax("player", Enum.PowerType.ComboPoints) or 0
+function BR.PaladinSecondaryDisplay:Show()
+    local max = UnitPowerMax("player", Enum.PowerType.HolyPower) or 0
     for i = 1, max do
         if self.points[i] then
             self.points[i]:Show()
@@ -120,7 +120,7 @@ function BR.RogueComboDisplay:Show()
 end
 
 -- Hide all points
-function BR.RogueComboDisplay:Hide()
+function BR.PaladinSecondaryDisplay:Hide()
     for i = 1, self.maxPoints do
         if self.points[i] then
             self.points[i]:Hide()
@@ -128,7 +128,7 @@ function BR.RogueComboDisplay:Hide()
     end
 end
 
--- Get height occupied by combo points
-function BR.RogueComboDisplay:GetHeight()
-    return 10
+-- Get height occupied by holy power
+function BR.PaladinSecondaryDisplay:GetHeight()
+    return 11
 end

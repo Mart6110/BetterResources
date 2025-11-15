@@ -1,13 +1,13 @@
--- Better Resources: Warlock Soul Shard Display Component
+-- Better Resources: Warlock Secondary Resource Display Component
 -- Single Responsibility: Display Warlock soul shards with larger, more visible display
 local _, BR = ...
 
-BR.SoulShardDisplay = {}
-BR.SoulShardDisplay.__index = BR.SoulShardDisplay
+BR.WarlockSecondaryDisplay = {}
+BR.WarlockSecondaryDisplay.__index = BR.WarlockSecondaryDisplay
 
 -- Constructor
-function BR.SoulShardDisplay:new(parent, width)
-    local self = setmetatable({}, BR.SoulShardDisplay)
+function BR.WarlockSecondaryDisplay:new(parent, width)
+    local self = setmetatable({}, BR.WarlockSecondaryDisplay)
     
     self.parent = parent
     self.shards = {}
@@ -20,7 +20,7 @@ function BR.SoulShardDisplay:new(parent, width)
 end
 
 -- Create individual shard displays
-function BR.SoulShardDisplay:CreateShards()
+function BR.WarlockSecondaryDisplay:CreateShards()
     local shardWidth = math.floor((self.width - 16) / self.maxShards)
     local shardSpacing = 4
     local totalWidth = (shardWidth * self.maxShards) + (shardSpacing * (self.maxShards - 1))
@@ -55,7 +55,7 @@ function BR.SoulShardDisplay:CreateShards()
 end
 
 -- Update soul shard display
-function BR.SoulShardDisplay:Update()
+function BR.WarlockSecondaryDisplay:Update()
     -- Get raw fragments (10 fragments = 1 shard)
     local currentFragments = UnitPower("player", Enum.PowerType.SoulShards, true)
     local maxFragments = UnitPowerMax("player", Enum.PowerType.SoulShards, true)
@@ -92,7 +92,7 @@ function BR.SoulShardDisplay:Update()
 end
 
 -- Update width when parent frame is resized
-function BR.SoulShardDisplay:UpdateWidth(width)
+function BR.WarlockSecondaryDisplay:UpdateWidth(width)
     self.width = width
     
     local shardWidth = math.floor((width - 16) / self.maxShards)
@@ -115,7 +115,7 @@ function BR.SoulShardDisplay:UpdateWidth(width)
 end
 
 -- Show all shards
-function BR.SoulShardDisplay:Show()
+function BR.WarlockSecondaryDisplay:Show()
     for i = 1, self.maxShards do
         if self.shards[i] then
             self.shards[i]:Show()
@@ -124,7 +124,7 @@ function BR.SoulShardDisplay:Show()
 end
 
 -- Hide all shards
-function BR.SoulShardDisplay:Hide()
+function BR.WarlockSecondaryDisplay:Hide()
     for i = 1, self.maxShards do
         if self.shards[i] then
             self.shards[i]:Hide()
@@ -133,6 +133,6 @@ function BR.SoulShardDisplay:Hide()
 end
 
 -- Get height occupied by shards
-function BR.SoulShardDisplay:GetHeight()
+function BR.WarlockSecondaryDisplay:GetHeight()
     return 12 -- 10 for shard height + 2 for spacing
 end

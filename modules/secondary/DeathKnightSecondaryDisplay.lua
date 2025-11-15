@@ -1,13 +1,13 @@
--- Better Resources: Death Knight Rune Display Component
--- Single Responsibility: Display and update Death Knight runes
+-- Better Resources: Death Knight Secondary Resource Display Component
+-- Single Responsibility: Display Death Knight runes
 local _, BR = ...
 
-BR.RuneDisplay = {}
-BR.RuneDisplay.__index = BR.RuneDisplay
+BR.DeathKnightSecondaryDisplay = {}
+BR.DeathKnightSecondaryDisplay.__index = BR.DeathKnightSecondaryDisplay
 
 -- Constructor
-function BR.RuneDisplay:new(parent, width)
-    local self = setmetatable({}, BR.RuneDisplay)
+function BR.DeathKnightSecondaryDisplay:new(parent, width)
+    local self = setmetatable({}, BR.DeathKnightSecondaryDisplay)
     
     self.parent = parent
     self.runes = {}
@@ -19,7 +19,7 @@ function BR.RuneDisplay:new(parent, width)
 end
 
 -- Create rune frames
-function BR.RuneDisplay:CreateRunes()
+function BR.DeathKnightSecondaryDisplay:CreateRunes()
     local runeWidth = math.floor((self.width - 15) / 6)
     local runeSpacing = 3
     local totalWidth = (runeWidth * 6) + (runeSpacing * 5)
@@ -54,7 +54,7 @@ function BR.RuneDisplay:CreateRunes()
 end
 
 -- Update rune display
-function BR.RuneDisplay:Update()
+function BR.DeathKnightSecondaryDisplay:Update()
     -- Collect rune data and sort by cooldown (ready first, then by remaining time)
     local runeData = {}
     for i = 1, 6 do
@@ -117,7 +117,7 @@ function BR.RuneDisplay:Update()
 end
 
 -- Update width when parent frame is resized
-function BR.RuneDisplay:UpdateWidth(width)
+function BR.DeathKnightSecondaryDisplay:UpdateWidth(width)
     self.width = width
     
     local runeWidth = math.floor((width - 15) / 6)
@@ -140,7 +140,7 @@ function BR.RuneDisplay:UpdateWidth(width)
 end
 
 -- Show all runes
-function BR.RuneDisplay:Show()
+function BR.DeathKnightSecondaryDisplay:Show()
     for i = 1, 6 do
         if self.runes[i] then
             self.runes[i]:Show()
@@ -149,7 +149,7 @@ function BR.RuneDisplay:Show()
 end
 
 -- Hide all runes
-function BR.RuneDisplay:Hide()
+function BR.DeathKnightSecondaryDisplay:Hide()
     for i = 1, 6 do
         if self.runes[i] then
             self.runes[i]:Hide()
@@ -158,6 +158,6 @@ function BR.RuneDisplay:Hide()
 end
 
 -- Get height occupied by runes
-function BR.RuneDisplay:GetHeight()
+function BR.DeathKnightSecondaryDisplay:GetHeight()
     return 10 -- 8 for rune height + 2 for spacing
 end

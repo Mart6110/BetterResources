@@ -85,21 +85,21 @@ function BR.ResourceFrame:CreateSecondaryPower()
     
     -- Create class-specific component
     if class == "DEATHKNIGHT" then
-        self.secondaryResource = BR.RuneDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.DeathKnightSecondaryDisplay:new(self.power, settings.width or 250)
     elseif class == "ROGUE" then
-        self.secondaryResource = BR.RogueComboDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.RogueSecondaryDisplay:new(self.power, settings.width or 250)
     elseif class == "DRUID" then
-        self.secondaryResource = BR.DruidComboDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.DruidSecondaryDisplay:new(self.power, settings.width or 250)
     elseif class == "MONK" then
-        self.secondaryResource = BR.MonkChiDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.MonkSecondaryDisplay:new(self.power, settings.width or 250)
     elseif class == "PALADIN" then
-        self.secondaryResource = BR.PaladinHolyPowerDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.PaladinSecondaryDisplay:new(self.power, settings.width or 250)
     elseif class == "EVOKER" then
-        self.secondaryResource = BR.EssenceDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.EvokerSecondaryDisplay:new(self.power, settings.width or 250)
     elseif class == "WARLOCK" then
-        self.secondaryResource = BR.SoulShardDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.WarlockSecondaryDisplay:new(self.power, settings.width or 250)
     elseif class == "MAGE" then
-        self.secondaryResource = BR.ArcaneChargesDisplay:new(self.power, settings.width or 250)
+        self.secondaryResource = BR.MageSecondaryDisplay:new(self.power, settings.width or 250)
     end
 end
 
@@ -145,6 +145,7 @@ function BR.ResourceFrame:RegisterEvents()
         "UNIT_DISPLAYPOWER",
         "UNIT_POWER_FREQUENT",
         "RUNE_POWER_UPDATE",
+        "PLAYER_SPECIALIZATION_CHANGED",
     }
     
     for _, event in ipairs(events) do

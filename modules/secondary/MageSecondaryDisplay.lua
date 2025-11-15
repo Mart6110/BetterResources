@@ -1,13 +1,13 @@
--- Better Resources: Mage Arcane Charges Display Component
+-- Better Resources: Mage Secondary Resource Display Component
 -- Single Responsibility: Display Mage arcane charges
 local _, BR = ...
 
-BR.ArcaneChargesDisplay = {}
-BR.ArcaneChargesDisplay.__index = BR.ArcaneChargesDisplay
+BR.MageSecondaryDisplay = {}
+BR.MageSecondaryDisplay.__index = BR.MageSecondaryDisplay
 
 -- Constructor
-function BR.ArcaneChargesDisplay:new(parent, width)
-    local self = setmetatable({}, BR.ArcaneChargesDisplay)
+function BR.MageSecondaryDisplay:new(parent, width)
+    local self = setmetatable({}, BR.MageSecondaryDisplay)
     
     self.parent = parent
     self.charges = {}
@@ -20,7 +20,7 @@ function BR.ArcaneChargesDisplay:new(parent, width)
 end
 
 -- Create individual charge displays
-function BR.ArcaneChargesDisplay:CreateCharges()
+function BR.MageSecondaryDisplay:CreateCharges()
     local chargeWidth = math.floor((self.width - 12) / self.maxCharges)
     local chargeSpacing = 4
     local totalWidth = (chargeWidth * self.maxCharges) + (chargeSpacing * (self.maxCharges - 1))
@@ -55,7 +55,7 @@ function BR.ArcaneChargesDisplay:CreateCharges()
 end
 
 -- Update arcane charges display
-function BR.ArcaneChargesDisplay:Update()
+function BR.MageSecondaryDisplay:Update()
     -- Get power values and desecretize through string formatting
     local rawCurrent = UnitPower("player", Enum.PowerType.ArcaneCharges)
     local rawMax = UnitPowerMax("player", Enum.PowerType.ArcaneCharges)
@@ -95,7 +95,7 @@ function BR.ArcaneChargesDisplay:Update()
 end
 
 -- Update width when parent frame is resized
-function BR.ArcaneChargesDisplay:UpdateWidth(width)
+function BR.MageSecondaryDisplay:UpdateWidth(width)
     self.width = width
     
     local chargeWidth = math.floor((width - 12) / self.maxCharges)
@@ -118,7 +118,7 @@ function BR.ArcaneChargesDisplay:UpdateWidth(width)
 end
 
 -- Show all charges
-function BR.ArcaneChargesDisplay:Show()
+function BR.MageSecondaryDisplay:Show()
     local max = UnitPowerMax("player", Enum.PowerType.ArcaneCharges)
     for i = 1, max do
         if self.charges[i] then
@@ -128,7 +128,7 @@ function BR.ArcaneChargesDisplay:Show()
 end
 
 -- Hide all charges
-function BR.ArcaneChargesDisplay:Hide()
+function BR.MageSecondaryDisplay:Hide()
     for i = 1, self.maxCharges do
         if self.charges[i] then
             self.charges[i]:Hide()
@@ -137,6 +137,6 @@ function BR.ArcaneChargesDisplay:Hide()
 end
 
 -- Get height occupied by charges
-function BR.ArcaneChargesDisplay:GetHeight()
+function BR.MageSecondaryDisplay:GetHeight()
     return 11 -- 9 for charge height + 2 for spacing
 end

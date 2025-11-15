@@ -1,13 +1,13 @@
--- Better Resources: Monk Chi Display Component
--- Single Responsibility: Display Monk chi
+-- Better Resources: Monk Secondary Resource Display Component
+-- Single Responsibility: Display Monk chi points
 local _, BR = ...
 
-BR.MonkChiDisplay = {}
-BR.MonkChiDisplay.__index = BR.MonkChiDisplay
+BR.MonkSecondaryDisplay = {}
+BR.MonkSecondaryDisplay.__index = BR.MonkSecondaryDisplay
 
 -- Constructor
-function BR.MonkChiDisplay:new(parent, width)
-    local self = setmetatable({}, BR.MonkChiDisplay)
+function BR.MonkSecondaryDisplay:new(parent, width)
+    local self = setmetatable({}, BR.MonkSecondaryDisplay)
     
     self.parent = parent
     self.orbs = {}
@@ -20,7 +20,7 @@ function BR.MonkChiDisplay:new(parent, width)
 end
 
 -- Create individual chi orb displays
-function BR.MonkChiDisplay:CreateOrbs()
+function BR.MonkSecondaryDisplay:CreateOrbs()
     local orbWidth = math.floor((self.width - 20) / self.maxOrbs)
     local orbSpacing = 4
     local totalWidth = (orbWidth * self.maxOrbs) + (orbSpacing * (self.maxOrbs - 1))
@@ -55,7 +55,7 @@ function BR.MonkChiDisplay:CreateOrbs()
 end
 
 -- Update chi display
-function BR.MonkChiDisplay:Update()
+function BR.MonkSecondaryDisplay:Update()
     local current = UnitPower("player", Enum.PowerType.Chi) or 0
     local max = UnitPowerMax("player", Enum.PowerType.Chi) or 0
     
@@ -87,7 +87,7 @@ function BR.MonkChiDisplay:Update()
 end
 
 -- Update width when parent frame is resized
-function BR.MonkChiDisplay:UpdateWidth(width)
+function BR.MonkSecondaryDisplay:UpdateWidth(width)
     self.width = width
     
     local orbWidth = math.floor((width - 20) / self.maxOrbs)
@@ -110,7 +110,7 @@ function BR.MonkChiDisplay:UpdateWidth(width)
 end
 
 -- Show all orbs
-function BR.MonkChiDisplay:Show()
+function BR.MonkSecondaryDisplay:Show()
     local max = UnitPowerMax("player", Enum.PowerType.Chi) or 0
     for i = 1, max do
         if self.orbs[i] then
@@ -120,7 +120,7 @@ function BR.MonkChiDisplay:Show()
 end
 
 -- Hide all orbs
-function BR.MonkChiDisplay:Hide()
+function BR.MonkSecondaryDisplay:Hide()
     for i = 1, self.maxOrbs do
         if self.orbs[i] then
             self.orbs[i]:Hide()
@@ -129,6 +129,6 @@ function BR.MonkChiDisplay:Hide()
 end
 
 -- Get height occupied by chi
-function BR.MonkChiDisplay:GetHeight()
+function BR.MonkSecondaryDisplay:GetHeight()
     return 10
 end

@@ -17,14 +17,15 @@ ui\FrameFactory.lua
 ui\SettingsPanel.lua
 
 # Secondary resource components
-modules\secondary\RuneDisplay.lua
-modules\secondary\RogueComboDisplay.lua
-modules\secondary\DruidComboDisplay.lua
-modules\secondary\MonkChiDisplay.lua
-modules\secondary\PaladinHolyPowerDisplay.lua
-modules\secondary\EssenceDisplay.lua
-modules\secondary\SoulShardDisplay.lua
-modules\secondary\ArcaneChargesDisplay.lua
+modules\secondary\DeathKnightSecondaryDisplay.lua
+modules\secondary\RogueSecondaryDisplay.lua
+modules\secondary\DruidSecondaryDisplay.lua
+modules\secondary\BalanceManaDisplay.lua
+modules\secondary\MonkSecondaryDisplay.lua
+modules\secondary\PaladinSecondaryDisplay.lua
+modules\secondary\EvokerSecondaryDisplay.lua
+modules\secondary\WarlockSecondaryDisplay.lua
+modules\secondary\MageSecondaryDisplay.lua
 
 # Frame modules
 modules\ResourceFrame.lua

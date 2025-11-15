@@ -1,18 +1,18 @@
--- Better Resources: Druid Combo Points Display Component
--- Single Responsibility: Display Druid Feral combo points
+-- Better Resources: Rogue Secondary Resource Display Component
+-- Single Responsibility: Display Rogue combo points
 local _, BR = ...
 
-BR.DruidComboDisplay = {}
-BR.DruidComboDisplay.__index = BR.DruidComboDisplay
+BR.RogueSecondaryDisplay = {}
+BR.RogueSecondaryDisplay.__index = BR.RogueSecondaryDisplay
 
 -- Constructor
-function BR.DruidComboDisplay:new(parent, width)
-    local self = setmetatable({}, BR.DruidComboDisplay)
+function BR.RogueSecondaryDisplay:new(parent, width)
+    local self = setmetatable({}, BR.RogueSecondaryDisplay)
     
     self.parent = parent
     self.points = {}
     self.width = width or 250
-    self.maxPoints = 5
+    self.maxPoints = 7 -- Rogues can have up to 7 with talents
     
     self:CreatePoints()
     
@@ -20,8 +20,8 @@ function BR.DruidComboDisplay:new(parent, width)
 end
 
 -- Create individual point displays
-function BR.DruidComboDisplay:CreatePoints()
-    local pointWidth = math.floor((self.width - 16) / self.maxPoints)
+function BR.RogueSecondaryDisplay:CreatePoints()
+    local pointWidth = math.floor((self.width - 24) / self.maxPoints)
     local pointSpacing = 4
     local totalWidth = (pointWidth * self.maxPoints) + (pointSpacing * (self.maxPoints - 1))
     
@@ -46,7 +46,7 @@ function BR.DruidComboDisplay:CreatePoints()
         point.fill = point:CreateTexture(nil, "ARTWORK")
         point.fill:SetAllPoints(point)
         point.fill:SetTexture("Interface\\Buttons\\WHITE8X8")
-        point.fill:SetVertexColor(1, 0.49, 0.04, 1) -- Orange
+        point.fill:SetVertexColor(1, 0.96, 0.41, 1) -- Yellow
         point.fill:Hide()
         
         point:Hide()
@@ -55,7 +55,7 @@ function BR.DruidComboDisplay:CreatePoints()
 end
 
 -- Update combo point display
-function BR.DruidComboDisplay:Update()
+function BR.RogueSecondaryDisplay:Update()
     local current = UnitPower("player", Enum.PowerType.ComboPoints) or 0
     local max = UnitPowerMax("player", Enum.PowerType.ComboPoints) or 0
     
@@ -87,10 +87,10 @@ function BR.DruidComboDisplay:Update()
 end
 
 -- Update width when parent frame is resized
-function BR.DruidComboDisplay:UpdateWidth(width)
+function BR.RogueSecondaryDisplay:UpdateWidth(width)
     self.width = width
     
-    local pointWidth = math.floor((width - 16) / self.maxPoints)
+    local pointWidth = math.floor((width - 24) / self.maxPoints)
     local pointSpacing = 4
     local totalWidth = (pointWidth * self.maxPoints) + (pointSpacing * (self.maxPoints - 1))
     
@@ -110,7 +110,7 @@ function BR.DruidComboDisplay:UpdateWidth(width)
 end
 
 -- Show all points
-function BR.DruidComboDisplay:Show()
+function BR.RogueSecondaryDisplay:Show()
     local max = UnitPowerMax("player", Enum.PowerType.ComboPoints) or 0
     for i = 1, max do
         if self.points[i] then
@@ -120,7 +120,7 @@ function BR.DruidComboDisplay:Show()
 end
 
 -- Hide all points
-function BR.DruidComboDisplay:Hide()
+function BR.RogueSecondaryDisplay:Hide()
     for i = 1, self.maxPoints do
         if self.points[i] then
             self.points[i]:Hide()
@@ -129,6 +129,6 @@ function BR.DruidComboDisplay:Hide()
 end
 
 -- Get height occupied by combo points
-function BR.DruidComboDisplay:GetHeight()
+function BR.RogueSecondaryDisplay:GetHeight()
     return 10
 end
