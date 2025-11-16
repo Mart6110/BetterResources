@@ -41,6 +41,9 @@ end
 local function InitializeFrames()
     if not BR.db.enabled then return end
     
+    -- Hide default UI secondary resources
+    BR:InitializeHideDefaultSecondaryResources()
+    
     -- Create our custom resource frame
     BR:InitializeResourceFrame()
     

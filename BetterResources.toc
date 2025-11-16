@@ -16,6 +16,9 @@ utils\Formatter.lua
 ui\FrameFactory.lua
 ui\SettingsPanel.lua
 
+# Hide default UI
+modules\HideDefaultSecondaryResources.lua
+
 # Secondary resource components
 modules\secondary\DeathKnightSecondaryDisplay.lua
 modules\secondary\RogueSecondaryDisplay.lua
