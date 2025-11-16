@@ -1,0 +1,29 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create addon package
+        run: |
+          mkdir -p package/BetterResources
+          cp -r *.lua *.toc modules ui utils package/BetterResources/
+          cd package
+          zip -r BetterResources.zip BetterResources
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: package/BetterResources.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
